@@ -1,29 +1,54 @@
-
 #Tic Tac Toe Game
+#Michael DelGaudio
 
-#functions: main, weclome playGame
-#response couldve been in its own function!!!
+#####
+# Working on making a machine learning AI to play against the player.
+# You can use debug mode below to switch on console statements.
+#####
+
+#####
+# KNOWN ISSUES:
+# Prints NONE to display if game is over.
+#####
+
+#from sklearn import tree
 
 debug = True
 
 def main():
-    """Main function for the game"""
     welcome()
-    while True:
-        if debug: print("About to enter playGame()")
+    gameContinue = True
+    while (gameContinue == True):
+        if debug: print("\n About to enter playGame() \n")
+        #Begin the game:
         playGame()
-        response = input("Would you like to play again? (y or n): ").strip()#get rid of the end of the spaces w strip this important it wouldve been "y\n" which we dont want
-        if not response in ["y","Y", "yes", "Yes", "Yup", "si", "oui", "youbetcha"]:#could be in its own func
-            print("Bye!")
-            return
+        #After the game:
+        response = input("Would you like to play again? (y or n): ").strip()
+        response = response.upper()
+        if (shouldGameContinue(response) == False) : 
+           print("Thanks for playing!") 
+           gameContinue = False
+        #Known issue: Prints None to display if game is over.
+
+def shouldGameContinue(response):
+    if debug : print("\n Inside shouldGameContinue() \n")
+    if(response != ["Y", "YES"]):
+        return False
+    else:
+        return True
 
 def welcome():
-    """Prints welcome message, we could put rules for the game and any other info the user might need to know"""
+    #Prints welcome message, we could put rules for the game and any other info the user might need to know
+    print()
+    print("-" * 40)
     print("Welcome to tic-tac-toe!")
+    print()
+    print("To make moves please use numbers such as 0 through 2 to select positions.")
+    print()
 
 def playGame():
-    """Play one game of ticTacToe"""
-    if debug: print("Entering the playGame() function")
+    #Play one game of ticTacToe
+    if debug: print("\n Entering the playGame() function \n" + "-" * 50)
     board = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
     player = 1
     print("The board looks like this:")
@@ -39,6 +64,7 @@ def gameOver(board):
     """Returns false if the game is NOT over. Otherwise, prints a message indicating which plater
     has won and then returns TRUE indicating that the game is over"""
     if debug: print("Entering the gameOver function")
+
     winner = getWinner(board)
     if winner == "1":
         print("Player 1 wins!")
@@ -49,45 +75,55 @@ def gameOver(board):
     if boardFull(board):
         print("Tie.")
         return True
+
     return False
 
 def getMove(board, player):
-    """Takes the board and the current player(1 or 2) as input. Asks the player for their move. If it's a legit move,
-    the change is made to the board. Otherwise, the player is asked again until a valid move is provided"""
+    #Takes the board and the current player(1 or 2) as input. Asks the player for their move. If it's a legit move, the change is made to the board. Otherwise, the player is asked again until a valid move is provided
     print("Player " + str(player) + "\'s turn")
     while True:
-        row = int(input("Enter the row: ").strip())
-        column = int(input("Enter the column: ").strip())
-        if row < 0 or row > 2 or column < 0 or column > 2:
-            print("That\'s not a valid location on the board! Try again.")
-        elif board[row][column] != " ":
-            print("That cell is already taken, try again!")
-        else:
-            board[row][column] = str(player)
-            break
+        try:
+            row = int(input("Enter the row: ").strip())
+            column = int(input("Enter the column: ").strip())
+            if row < 0 or row > 2 or column < 0 or column > 2:
+                print("That\'s not a valid location on the board! Try again.")
+            elif board[row][column] != " ":
+                print("That cell is already taken, try again!")
+            else:
+                board[row][column] = str(player)
+                break
+        except ValueError:
+            print("I'm sorry, I don't understand. Please use values 0 through 2 only.")
+            continue
 
 def printBoard(board):
-    if debug: print("Entering the printBoard() function")
+    if debug: print("\n Entering the printBoard() function \n")
+
     for row in range(0,3):
         print(" ", end = "")
         for column in range(0, 3):
             print(board[row][column], end = " ")
             if column < 2: print("|", end = " ")
-        print() #Causes a LineBreak!
+        print()
         if row < 2: print("-" * 11)
 
 
-def boardFull(board): #checking the prop of 2D array... we are checking if a slot is empty... check all rows and columns that an entry is not blank
+def boardFull(board): 
+    #checking the prop of 2D array... we are checking if a slot is empty... check all rows and columns that an entry is not blank
     if debug: print("Entering the boardFull() function")
+
     for row in range(3):
         for col in range(3):
             if board[row][col] == " ":
                 return False
     return True
 
+def computerAI():
+    if debug: print("\n Inside computerAI() \n")
+
 
 def getWinner(board):
-    if debug: print("Entering getWinner() function")
+    if debug: print("\n Inside getWinner() \n")
     #Check rows
     for row in range(3):
         val = board[row][0]
@@ -131,9 +167,6 @@ def getWinner(board):
         if index == 3:
             return val 
     return " "
-
-#if __name__ == "__main__":
-#    main()
 
 print(main())
 
